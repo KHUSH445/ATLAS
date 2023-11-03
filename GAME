@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+int isValidCity(const char *city) {
+    for (int i = 0; city[i] != '\0'; i++) {
+        if (!isalpha(city[i])) {
+            return 0; // Invalid city name
+        }
+    }
+    return 1; // Valid city name
+}
+
+int main() {
+    int numPlayers;
+    printf("Welcome to ATLAS!\n");
+
+    do {
+        printf("Enter the number of players (2 to 6): ");
+        scanf("%d", &numPlayers);
+    } while (numPlayers < 2 || numPlayers > 6);
+
+    char city[50];
+    char lastLetter = ' ';
+    int currentPlayer = 1;
+
+    printf("Let's start with a city name: ");
+
+    while (1) {
+        scanf("%s", city);
+        for (int i = 0; city[i] != '\0'; i++) {
+            city[i] = toupper(city[i]);
+        }
+
+        if (isValidCity(city)) {
+            if (lastLetter == ' ' || lastLetter == city[0]) {
+                lastLetter = city[strlen(city) - 1];
+                printf("Valid move! Player %d\n", currentPlayer);
+                currentPlayer = (currentPlayer % numPlayers) + 1; // Move to the next player
+            } else {
+                printf("Invalid move! The city name must start with the last letter of the previous city.\n");
+                printf("Player %d loses!\n", currentPlayer);
+                currentPlayer = (currentPlayer % numPlayers) + 1; // Next player
+                lastLetter = ' '; // Reset last letter for the next round
+            }
+        } else {
+            printf("Invalid move! Please enter a valid city name.\n");
+        }
+    }
+
+    printf("Thanks for playing ATLAS!\n");
+
+    return 0;
+}
